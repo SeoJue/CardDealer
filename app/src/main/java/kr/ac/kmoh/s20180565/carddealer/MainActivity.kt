@@ -3,17 +3,41 @@ package kr.ac.kmoh.s20180565.carddealer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import kr.ac.kmoh.s20180565.carddealer.databinding.ActivityMainBinding
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private val model: cardViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        model.cards.observe(this, Observer<IntArray> {
+            val res = IntArray(5)
+            for (i in it.indices) {
+                res[i] = resources.getIdentifier(
+                    getCardName(it[i]),
+                    "drawable",
+                    packageName
+                )
+            }
+            binding.card1.setImageResource(res[0])
+            binding.card2.setImageResource(res[1])
+            binding.card3.setImageResource(res[2])
+            binding.card4.setImageResource(res[3])
+            binding.card5.setImageResource(res[4])
+        } )
+
+
         binding.btnDeal.setOnClickListener {
+            /*
             val c = IntArray(5)
             val res = IntArray(5)
 
@@ -37,6 +61,9 @@ class MainActivity : AppCompatActivity() {
             binding.card3.setImageResource(res[2])
             binding.card4.setImageResource(res[3])
             binding.card5.setImageResource(res[4])
+            */
+
+            model.deal()
         }
     }
 
